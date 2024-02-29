@@ -12,7 +12,7 @@ jobs:
     runs-on: ['self-hosted', 'Linux', 'X64', 'react' ]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
           node-version: '20.11.1'
 
