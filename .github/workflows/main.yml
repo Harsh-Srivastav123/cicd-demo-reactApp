@@ -11,10 +11,12 @@ jobs:
 
     runs-on: ['self-hosted', 'Linux', 'X64', 'react' ]
 
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x, 18.x]
+
     steps:
     - uses: actions/checkout@v2
-      with:
-          node-version: '14'
 
      # Display npm version
     - name: Display npm version
