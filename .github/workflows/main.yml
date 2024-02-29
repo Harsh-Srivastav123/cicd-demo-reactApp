@@ -20,7 +20,7 @@ jobs:
       run: sudo docker container stop react-container || true      
         # install dependencies
     - name: Install dependencies
-      run: npm i   
+      run: npm install   
         # build the react app
     - name: Build
       run: npm run build  
