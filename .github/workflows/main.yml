@@ -1,0 +1,37 @@
+name:  Ci/ Cd React App
+
+on:
+  push:
+    branches: [ "main" ]
+
+
+jobs:
+
+  build:
+
+    runs-on: ['self-hosted', 'Linux', 'X64', 'react' ]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+          node-version: '14'
+
+    - name: stop old container
+      run: sudo docker container stop react-container || true      
+        # install dependencies
+    - name: Install dependencies
+      run: npm i   
+        # build the react app
+    - name: Build
+      run: npm run build  
+    - name: Delete old container 
+      run: sudo docker container rm react-container|| true
+    - name: Delete old image 
+      run:  sudo docker image rm react || true
+
+    - name: Build the Docker image
+      run: sudo docker build -t react .
+      
+   
+    - name: Run docker image
+      run: sudo docker run -d --env-file /home/ubuntu/env.properties -p 3000:3000 --name react-container quizmate  sleep infinity| echo "success"   
