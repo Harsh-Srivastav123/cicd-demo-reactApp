@@ -19,16 +19,16 @@ jobs:
     #  # Display npm version
     # - name: Display npm version
     #   run: npm --version
-    - name: Use Node.js 20.11.1
+    - name: Use Node.js 16
       uses: actions/setup-node@v2
       with:
-          node-version: '20.11.1'
+          node-version: '16.x'
 
     - name: stop old container
       run: sudo docker container stop react-container || true      
         install dependencies
     - name: Install dependencies
-      run: npm install   
+      run: npm i   
         # build the react app
     - name: Build
       run: npm run build  
