@@ -12,34 +12,35 @@ jobs:
     runs-on: ['self-hosted', 'Linux', 'X64', 'react' ]
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     #   with:
     #       node-version: '20.11.1'
 
     #  # Display npm version
     # - name: Display npm version
-    #   run: npm --version
-    - name: Use Node.js 16
+    #   run: npm --version"
+    - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-          node-version: '16.x'
+          node-version: '16'
+          cache: 'npm'
 
-    - name: stop old container
-      run: sudo docker container stop react-container || true      
-        install dependencies
     - name: Install dependencies
-      run: npm i   
-        # build the react app
-    - name: Build
-      run: npm run build  
-    - name: Delete old container 
-      run: sudo docker container rm react-container|| true
-    - name: Delete old image 
-      run:  sudo docker image rm react || true
+      run: npm install
 
-    - name: Build the Docker image
-      run: sudo docker build -t react .
-      
-   
-    - name: Run docker image
-      run: sudo docker run -d -p 3000:3000 --name react-container react  sleep infinity| echo "success"   
+    - name: Build
+      run: npm run build
+
+    - name: Stop Docker container
+      run: docker stop my-container || true
+
+    - name: Delete old Docker images & container
+      run: |
+          docker rm my-container || true
+          docker rmi my-image:latest || true
+
+    - name: Build Docker image
+      run: docker build -t my-image .
+
+    - name: Run Docker container
+      run: docker run -d --name my-container -p 3000:3000 my-image
