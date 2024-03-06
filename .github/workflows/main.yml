@@ -9,7 +9,7 @@ jobs:
 
   build:
 
-    runs-on: [ubuntu-latest]
+    runs-on: ['self-hosted', 'Linux', 'X64', 'react']
 
     steps:
     - uses: actions/checkout@v2
