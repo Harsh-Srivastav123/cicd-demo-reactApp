@@ -24,7 +24,7 @@ jobs:
         run: npm run build
 
   docker:
-    runs-on: ['self-hosted', 'Linux', 'X64', 'react']
+    runs-on: ['self-hosted', 'Linux', 'X64']
     needs: build
 
     steps:
