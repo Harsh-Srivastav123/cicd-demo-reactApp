@@ -1,5 +1,49 @@
 name: CI/CD Pipeline for React App
 
+# on:
+#   push:
+#     branches: [main]
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v2
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+#           cache: 'npm'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Build
+#         run: npm run build
+
+#   docker:
+#     runs-on: ['self-hosted', 'Linux', 'X64']
+#     needs: build
+
+#     steps:
+#       - name: Stop Docker container
+#         run: sudo docker stop react-container || true
+
+#       - name: Delete old Docker images & container
+#         run: |
+#           sudo docker rm react-container || true
+#           sudo docker rmi react-image || true
+
+#       - name: Build Docker image
+#         run: sudo docker build -t react-image .
+
+#       - name: Run Docker container
+#         run: sudo docker run -d --name react-container -p 3000:3000 react-image
+
+# name: Docker Image Build and Deployment
+
 on:
   push:
     branches: [main]
@@ -9,7 +53,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -23,21 +68,37 @@ jobs:
       - name: Build
         run: npm run build
 
-  docker:
-    runs-on: ['self-hosted', 'Linux', 'X64']
-    needs: build
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    steps:
-      - name: Stop Docker container
-        run: sudo docker stop react-container || true
-
-      - name: Delete old Docker images & container
-        run: |
-          sudo docker rm react-container || true
-          sudo docker rmi react-image || true
+      - name: Delete old Docker image
+        run: docker image rm harshsrivastav2003/react-image || true
 
       - name: Build Docker image
-        run: sudo docker build -t react-image .
+        run: docker build -t harshsrivastav2003/react-image .
 
+      - name: Push Docker image to Docker Hub
+        run: docker push harshsrivastav2003/react-image
+
+  deploy:
+    needs: build
+    runs-on: ['self-hosted', 'Linux', 'X64' ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Pull Docker image
+        run: docker pull harshsrivastav2003/react-image
+
+      # Add your deployment steps here
       - name: Run Docker container
-        run: sudo docker run -d --name react-container -p 3000:3000 react-image
+        run: docker run -d -p 3000:3000 harshsrivastav2003/react-image sleep infinity| echo "success"
