@@ -85,7 +85,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ['self-hosted', 'Linux', 'X64' ]
+    runs-on: ['self-hosted', 'Linux', 'X64','react' ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
