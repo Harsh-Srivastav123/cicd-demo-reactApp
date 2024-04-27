@@ -10,7 +10,7 @@ defaults:
 
 jobs:
   build:
-    runs-on: ['self-hosted', 'Linux', 'X64', 'gcs']
+    runs-on: ['self-hosted', 'Linux', 'X64', 'react']
 
     
     steps:
