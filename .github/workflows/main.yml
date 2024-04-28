@@ -29,7 +29,6 @@
 #       - name: Build
 #         run: npm run build
 
-
 name: Quizmate-Frontend
 
 on:
@@ -60,13 +59,22 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Archive dist folder
-        uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
-      - name: Copy dist folder to client directory
-        run: cp -r dist/ ../client/   
+      # - name: Archive dist folder
+      #   uses: actions/upload-artifact@v2
+      #   with:
+      #     name: dist
+      #     path: dist
+
+      # - name: Copy dist folder to client directory
+      #   run: cp -r dist/ ../client/
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "srivastavharsh68@gmail.com"
+          git config --global user.name "Harsh-Srivastav123"
+          git add .
+          git commit -m "Update dist folder"
+          git push origin main
 
   Deploy:
     runs-on: ['self-hosted', 'Linux', 'X64', 'gcp']
