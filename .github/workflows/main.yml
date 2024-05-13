@@ -29,23 +29,78 @@
 #       - name: Build
 #         run: npm run build
 
-name: Quizmate-Frontend
+# name: Quizmate-Frontend
+
+# on:
+#   push:
+#     branches: [main]
+
+# defaults:
+#   run:
+#     working-directory: ./client    
+
+# jobs:
+#   build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+#           cache: 'npm'
+
+#       - name: Install dependencies
+#         run: npm install
+        
+#       - name: Build
+#         run: npm run build
+
+#       # - name: Archive dist folder
+#       #   uses: actions/upload-artifact@v2
+#       #   with:
+#       #     name: dist
+#       #     path: dist
+
+#       # - name: Copy dist folder to client directory
+#       #   run: cp -r dist/ ../client/
+
+#       - name: Commit and push changes
+#         run: |
+#           git config --global user.email "srivastavharsh68@gmail.com"
+#           git config --global user.name "Harsh-Srivastav123"
+#           git add .
+#           git commit -m "Update dist folder"
+#           git push origin main
+
+#   Deploy:
+#     runs-on: ['self-hosted', 'Linux', 'X64', 'gcp']
+#     steps:
+#       - name: Checkout code and dist folder
+#         uses: actions/checkout@v2
+
+#       - name: Restart Nginx
+#         run: sudo systemctl restart nginx
+
+
+name: CI/CD
 
 on:
   push:
-    branches: [main]
-
-defaults:
-  run:
-    working-directory: ./client    
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+
+
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
@@ -55,32 +110,15 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        
+
       - name: Build
         run: npm run build
 
-      # - name: Archive dist folder
-      #   uses: actions/upload-artifact@v2
-      #   with:
-      #     name: dist
-      #     path: dist
-
-      # - name: Copy dist folder to client directory
-      #   run: cp -r dist/ ../client/
-
-      - name: Commit and push changes
+      - name: Deploy to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ap-south-1
+          S3_BUCKET_NAME: qrcode-data
         run: |
-          git config --global user.email "srivastavharsh68@gmail.com"
-          git config --global user.name "Harsh-Srivastav123"
-          git add .
-          git commit -m "Update dist folder"
-          git push origin main
-
-  Deploy:
-    runs-on: ['self-hosted', 'Linux', 'X64', 'gcp']
-    steps:
-      - name: Checkout code and dist folder
-        uses: actions/checkout@v2
-
-      - name: Restart Nginx
-        run: sudo systemctl restart nginx
+          aws s3 sync build/ s3://$S3_BUCKET_NAME --delete
