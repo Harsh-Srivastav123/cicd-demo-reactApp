@@ -122,6 +122,6 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ap-south-1
-          S3_BUCKET_NAME: qrcode-data
+          S3_BUCKET_NAME: deployment-react-123
         run: |
           aws s3 sync dist/ s3://$S3_BUCKET_NAME --delete
