@@ -127,6 +127,40 @@
 #           aws s3 sync build/ s3://$S3_BUCKET_NAME --delete
 
 
+# name: React-Demo
+
+# on:
+#   push:
+#     branches: [main]
+
+# # if you have src in some other folder then mention the directory.
+
+# # defaults:
+# #   run:
+# #     working-directory: ./client    
+
+# jobs:
+#   build:
+#     runs-on: ['self-hosted', 'Linux', 'X64','nginx']
+
+    
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
+
+#       - name: Set up Node.js
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+#           cache: 'npm'
+
+#       - name: Install dependencies
+#         run: npm install
+
+#       - name: Build
+#         run: npm run build
+
+
 name: React-Demo
 
 on:
@@ -141,7 +175,7 @@ on:
 
 jobs:
   build:
-    runs-on: ['self-hosted', 'Linux', 'X64','nginx']
+    runs-on: ['self-hosted', 'Linux', 'X64','demo']
 
     
     steps:
